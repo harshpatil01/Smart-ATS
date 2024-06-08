@@ -108,7 +108,7 @@ Smart ATS is a Streamlit-based web application that helps users improve their re
 
 4. **Access the Application**
 
-   Open your web browser and go to the URL provided by Streamlit, typically `http://localhost:8501`.
+   Open your web browser and go to the URL provided by Streamlit.
 
 ### Usage
 
