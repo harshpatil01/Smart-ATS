@@ -1,0 +1,12 @@
+This file enumerates all the dependencies necessary for the project.
+
+### Libraries Used
+
+- streamlit
+- openai
+- python-dotenv
+- PyPDF2
+- os
+- docx
+- json
+
