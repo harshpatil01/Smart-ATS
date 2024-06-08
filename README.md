@@ -22,7 +22,7 @@ Smart ATS is a Streamlit-based web application that helps users improve their re
    This file contains your OpenAI API key. It should look something like this:
 
    ```
-   OPENAI_API_KEY=your_openai_api_key_here
+   OPENAI_API_KEY="your_openai_api_key_here"
    ```
 
 3. **style.css**
