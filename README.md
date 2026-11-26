@@ -3,23 +3,24 @@
 
 ### Description
 
-Smart ATS is a Streamlit-based web application that helps users improve their resumes by evaluating them against job descriptions using OpenAI's GPT-4. The application supports both PDF and DOCX resume files and provides a detailed analysis, including job description match percentage, missing keywords, and a profile summary.
+Smart ATS is a Streamlit-based web application that helps users improve their resumes by evaluating them against job descriptions using an OpenAI model (default `gpt-4o-mini`, configurable). The application supports both PDF and DOCX resume files and provides a detailed analysis, including job description match percentage, missing keywords, and a profile summary.
 
 ### Repository Structure
 
 - **application_ats.py**: The main application file containing the Streamlit code.
-- **.env**: A file containing your OpenAI API key.
+- **.env.example**: Template for your `.env` file with the OpenAI API key (the real `.env` is git-ignored).
+- **requirements.txt**: Python dependencies.
 - **style.css**: A file containing custom CSS styles for the application.
 
 ### Files
 
 1. **application_ats.py**
 
-   This is the main application file. It sets up the Streamlit interface, handles file uploads, extracts text from PDF and DOCX files, sends the text to GPT-4 for analysis, and displays the results.
+   This is the main application file. It sets up the Streamlit interface, handles file uploads, extracts text from PDF and DOCX files, sends the text to the OpenAI API for analysis, and displays the results.
 
-2. **.env**
+2. **.env** (you create it from `.env.example`)
 
-   This file contains your OpenAI API key. It should look something like this:
+   This file contains your OpenAI API key and is git-ignored, so it is never committed. It should look something like this:
 
    ```
    OPENAI_API_KEY="your_openai_api_key_here"
@@ -49,53 +50,25 @@ Smart ATS is a Streamlit-based web application that helps users improve their re
 
 #### Prerequisites
 
-1. **Python 3.7 or higher**: Ensure you have Python installed on your machine. You can download it from [python.org](https://www.python.org/).
-
-2. **Streamlit**: Install Streamlit if you haven't already.
-
-   ```sh
-   pip install streamlit
-   ```
-
-3. **OpenAI**: Install the OpenAI package.
-
-   ```sh
-   pip install openai
-   ```
-
-4. **PyPDF2**: Install PyPDF2 for PDF text extraction.
-
-   ```sh
-   pip install PyPDF2
-   ```
-
-5. **python-docx**: Install python-docx for DOCX text extraction.
-
-   ```sh
-   pip install python-docx
-   ```
-
-6. **python-dotenv**: Install python-dotenv to manage environment variables.
-
-   ```sh
-   pip install python-dotenv
-   ```
+- Python 3.9 or higher
+- An OpenAI API key (usage is billed by OpenAI)
 
 #### Steps to Run the Application
 
 1. **Clone the Repository**
 
    ```sh
-   git clone https://github.com/yourusername/smart-ats.git
-   cd smart-ats
+   git clone https://github.com/harshpatil01/Smart-ATS.git
+   cd Smart-ATS
+   pip install -r requirements.txt
    ```
 
 2. **Set Up the Environment**
 
-   Create a `.env` file in the root directory of the project and add your OpenAI API key.
+   Copy `.env.example` to `.env` and add your OpenAI API key.
 
-   ```
-   OPENAI_API_KEY=your_openai_api_key_here
+   ```sh
+   cp .env.example .env
    ```
 
 3. **Run the Application**
@@ -117,3 +90,13 @@ Smart ATS is a Streamlit-based web application that helps users improve their re
 3. **Submit**: Click the "Submit" button to get the analysis.
 4. **View Results**: The application will display the job description match percentage, missing keywords, and a profile summary.
 
+
+### Limitations
+
+- The match percentage is the language model's estimate, not a score from a real applicant tracking system. Treat it as a rough guide.
+- Results can vary between runs for the same resume and job description.
+- Resume text is sent to the OpenAI API, so don't upload documents you are not comfortable sharing with a third-party service.
+
+## License
+
+Code is released under the [MIT License](LICENSE). Datasets keep their original source licences.
