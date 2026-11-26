@@ -106,7 +106,7 @@ the missing keywords with high accuracy. Provide a comprehensive list of missing
 resume:{text}
 description:{jd}
 
-I want the response in one single string having the structure
+Return only valid JSON with this structure:
 {{"JD Match": "85%", "MissingKeywords": ["keyword1", "keyword2"], "Profile Summary": "..."}}
 """
 
