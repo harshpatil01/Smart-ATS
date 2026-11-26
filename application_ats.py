@@ -1,5 +1,5 @@
 import streamlit as st  # Import Streamlit for web interface
-import openai  # Import OpenAI for GPT-4 API
+from openai import OpenAI  # OpenAI Python SDK (v1+)
 import os  # Import os for environment variable access
 import PyPDF2 as pdf  # Import PyPDF2 for PDF text extraction
 import docx  # Import python-docx for DOCX text extraction
@@ -9,8 +9,11 @@ import json  # Import json for handling JSON data
 # Load environment variables from a .env file
 load_dotenv()
 
-# Configure the OpenAI API with the API key from environment variables
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Create the OpenAI client. It reads the key from the OPENAI_API_KEY environment variable.
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+# Model used for the analysis. Override it with the OPENAI_MODEL environment variable if you like.
+MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 # Styling
 def local_css(file_name):
@@ -22,16 +25,17 @@ local_css("style.css")
 
 def get_gpt_response(input_text):
     """
-    Generates a response from GPT-4 based on the input text.
+    Sends the prompt to the OpenAI model and returns its reply.
 
     Parameters:
         input_text (str): The input prompt to send to the GPT-4 model.
 
     Returns:
-        str: The text response from GPT-4.
+        str: The text response from the model.
     """
-    response = openai.ChatCompletion.create(
-        model="gpt-4",  # Specify the GPT-4 model
+    response = client.chat.completions.create(
+        model=MODEL,
+        response_format={"type": "json_object"},  # Ask for valid JSON so json.loads() below works
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},  # System message to set the assistant's behavior
             {"role": "user", "content": input_text}  # User message containing the input text
@@ -39,7 +43,7 @@ def get_gpt_response(input_text):
         max_tokens=500,  # Adjust based on the expected length of response
         temperature=0.7  # Adjust creativity level
     )
-    return response['choices'][0]['message']['content'].strip()  # Return the generated response
+    return response.choices[0].message.content.strip()  # Return the generated response
 
 def input_pdf_text(uploaded_file):
     """
@@ -77,7 +81,7 @@ def format_response(response):
     Formats the response into a more presentable structure.
 
     Parameters:
-        response (str): The raw response from GPT-4.
+        response (str): The raw JSON response from the model.
 
     Returns:
         str: The formatted response.
@@ -103,7 +107,7 @@ resume:{text}
 description:{jd}
 
 I want the response in one single string having the structure
-{{"JD Match":"%","MissingKeywords:[]","Profile Summary":""}}
+{{"JD Match": "85%", "MissingKeywords": ["keyword1", "keyword2"], "Profile Summary": "..."}}
 """
 
 # Streamlit app interface
@@ -125,8 +129,12 @@ if submit:
             st.stop()
 
         prompt = input_prompt.format(text=text, jd=jd)  # Format the prompt with the extracted text and JD
-        response = get_gpt_response(prompt)  # Get response from GPT-4
-        formatted_response = format_response(response)  # Format the response
-        st.markdown(formatted_response)  # Display the formatted response
+        response = get_gpt_response(prompt)  # Get the model's analysis
+        try:
+            formatted_response = format_response(response)  # Format the response
+            st.markdown(formatted_response)  # Display the formatted response
+        except (json.JSONDecodeError, KeyError):
+            st.error("The model returned an unexpected format. Raw reply shown below.")
+            st.code(response)
     else:
         st.error("Please upload a resume.")  # Error message for missing resume
