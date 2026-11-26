@@ -96,3 +96,7 @@ Smart ATS is a Streamlit-based web application that helps users improve their re
 - The match percentage is the language model's estimate, not a score from a real applicant tracking system. Treat it as a rough guide.
 - Results can vary between runs for the same resume and job description.
 - Resume text is sent to the OpenAI API, so don't upload documents you are not comfortable sharing with a third-party service.
+
+## License
+
+Code is released under the [MIT License](LICENSE). Datasets keep their original source licences.
